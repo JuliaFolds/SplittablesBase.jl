@@ -1,3 +1,16 @@
+# Load docstring from markdown files:
+for (name, path) in [
+    :test => joinpath(@__DIR__, "test.md"),
+]
+    try
+        include_dependency(path)
+        str = read(path, String)
+        @eval @doc $str $name
+    catch err
+        @error "Failed to import docstring for $name" exception = (err, catch_backtrace())
+    end
+end
+
 function getlabel(x)
     i, example = x
     if example isa NamedTuple

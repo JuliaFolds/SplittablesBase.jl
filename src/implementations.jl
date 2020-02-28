@@ -1,5 +1,8 @@
-# Load docstring of `halve` from `./halve.md`:
-let name = :halve, path = joinpath(@__DIR__, "halve.md")
+# Load docstring from markdown files:
+for (name, path) in [
+    :SplittablesBase => joinpath(dirname(@__DIR__), "README.md"),
+    :halve => joinpath(@__DIR__, "halve.md"),
+]
     try
         include_dependency(path)
         str = read(path, String)

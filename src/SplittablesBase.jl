@@ -3,7 +3,7 @@ baremodule SplittablesBase
 function halve end
 
 module Implementations
-import ..SplittablesBase: halve
+import ..SplittablesBase: SplittablesBase, halve
 using Setfield: @set
 include("implementations.jl")
 end  # module
