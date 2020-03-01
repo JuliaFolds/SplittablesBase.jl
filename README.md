@@ -1,5 +1,7 @@
 # SplittablesBase: a simple API for parallel computation on collections
 
+[![GitHub Actions](https://github.com/tkf/SplittablesBase.jl/workflows/Run%20tests/badge.svg)](https://github.com/tkf/SplittablesBase.jl/actions?query=workflow%3A%22Run+tests%22)
+
 SplittablesBase.jl defines a simple API `halve(collection)` for
 splitting given `collection` roughly in half.  This is the basis of
 parallel algorithms like reduction and sorting.  Custom containers can
