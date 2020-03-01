@@ -1,5 +1,6 @@
 # SplittablesBase: a simple API for parallel computation on collections
 
+[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://tkf.github.io/SplittablesBase.jl/dev)
 [![GitHub Actions](https://github.com/tkf/SplittablesBase.jl/workflows/Run%20tests/badge.svg)](https://github.com/tkf/SplittablesBase.jl/actions?query=workflow%3A%22Run+tests%22)
 
 SplittablesBase.jl defines a simple API `halve(collection)` for
@@ -12,6 +13,20 @@ function `SplittablesBase.Testing.test(examples)` where some
 automatable tests are run against each example container in
 `examples`.  This utility function is planned to be moved out to a
 separate package.
+
+## Supported collections
+
+`halve` methods for following collections in `Base` are implemented in
+SplittablesBase.jl:
+
+* `AbstractArray`
+* `AbstractString`
+* `Tuple`
+* `NamedTuple`
+* `zip`
+* `Iterators.partition`
+* `Iterators.product`
+* `Iterators.enumerate`
 
 ## Packages using SplittablesBase.jl
 
