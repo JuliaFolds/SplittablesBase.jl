@@ -13,4 +13,5 @@ makedocs(;
 
 deploydocs(;
     repo="github.com/tkf/SplittablesBase.jl",
+    push_preview=true,
 )
