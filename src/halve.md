@@ -16,8 +16,8 @@ Implementations of `halve` on custom collections must satisfy the
 following laws.
 
 (1) If the original collection is ordered, concatenating the
-sub-collections returned by `halve` must be create an collection that
-is equivalent to the original collection.  More precisely,
+sub-collections returned by `halve` must create a collection that is
+equivalent to the original collection.  More precisely,
 
 ```julia
 isequal(
