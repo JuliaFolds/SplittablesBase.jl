@@ -13,6 +13,20 @@ automatable tests are run against each example container in
 `examples`.  This utility function is planned to be moved out to a
 separate package.
 
+## Supported collections
+
+`halve` methods for following collections in `Base` are implemented in
+SplittablesBase.jl:
+
+* `AbstractArray`
+* `AbstractString`
+* `Tuple`
+* `NamedTuple`
+* `zip`
+* `Iterators.partition`
+* `Iterators.product`
+* `Iterators.enumerate`
+
 ## Packages using SplittablesBase.jl
 
 * [Transducers.jl](https://github.com/tkf/Transducers.jl) (planned)
