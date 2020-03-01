@@ -1,5 +1,6 @@
 # SplittablesBase: a simple API for parallel computation on collections
 
+[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://tkf.github.io/SplittablesBase.jl/dev)
 [![GitHub Actions](https://github.com/tkf/SplittablesBase.jl/workflows/Run%20tests/badge.svg)](https://github.com/tkf/SplittablesBase.jl/actions?query=workflow%3A%22Run+tests%22)
 
 SplittablesBase.jl defines a simple API `halve(collection)` for
