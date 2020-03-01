@@ -14,6 +14,9 @@ automatable tests are run against each example container in
 `examples`.  This utility function is planned to be moved out to a
 separate package.
 
+See more in the
+[documentation](https://tkf.github.io/SplittablesBase.jl/dev).
+
 ## Supported collections
 
 `halve` methods for following collections in `Base` are implemented in
