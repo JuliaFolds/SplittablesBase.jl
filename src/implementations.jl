@@ -30,6 +30,11 @@ if isdefined(Iterators, :Zip1)  # VERSION < v"1.1-"
 else
     arguments(xs::Iterators.Zip) = xs.is
 end
+if isdefined(Iterators, :AbstractZipIterator)  # VERSION < v"1.1-"
+    const _Zip = Iterators.AbstractZipIterator
+else
+    const _Zip = Iterators.Zip
+end
 
 function halve(xs::AbstractArray)
     # TODO: support "slow" arrays
@@ -59,7 +64,7 @@ end
     return NamedTuple{lnames}(xs), NamedTuple{rnames}(xs)
 end
 
-function halve(xs::Iterators.Zip)
+function halve(xs::_Zip)
     lefts, rights = _unzip(map(halve, arguments(xs)))
     return zip(lefts...), zip(rights...)
 end
