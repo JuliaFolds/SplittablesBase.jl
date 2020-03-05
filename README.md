@@ -33,8 +33,8 @@ SplittablesBase.jl:
 
 ## Packages using SplittablesBase.jl
 
-* [Transducers.jl](https://github.com/tkf/Transducers.jl) (planned)
-* [ThreadsX.jl](https://github.com/tkf/ThreadsX.jl) (planned)
+* [Transducers.jl](https://github.com/tkf/Transducers.jl)
+* [ThreadsX.jl](https://github.com/tkf/ThreadsX.jl)
 
 ## See also
 
