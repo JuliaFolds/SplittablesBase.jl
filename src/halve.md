@@ -28,6 +28,19 @@ isequal(
 
 must hold.
 
+Similar relationship must hold for unordered collections; i.e., taking
+union of left and right collections as multiset must create a
+collection that is equivalent to the original collection as a
+multiset:
+
+```julia
+using StatsBase: countmap
+isequal(
+    countmap(collect(collection)),
+    merge(+, countmap(collect(left)), coutmap(collect(right))),
+)
+```
+
 (2) `halve` must shorten the collection.  More precisely, if
 `length(collection) > 1`, both `length(left) < length(collection)` and
 `length(right) < length(collection)` must hold.
