@@ -36,13 +36,34 @@ else
     const _Zip = Iterators.Zip
 end
 
-function halve(xs::AbstractArray)
-    # TODO: support "slow" arrays
+function halve(xs::AbstractVector)
     mid = length(xs) ÷ 2
     left = @view xs[firstindex(xs):firstindex(xs)-1+mid]
     right = @view xs[firstindex(xs)+mid:end]
     return (left, right)
 end
+
+function halve(xs::AbstractArray)
+    i = something(findlast(>(1), size(xs)), 1)
+    mid = size(xs, i) ÷ 2
+    leftranges = ntuple(ndims(xs)) do j
+        if i == j
+            firstindex(xs, j):firstindex(xs, j) + mid - 1
+        else
+            firstindex(xs, j):lastindex(xs, j)
+        end
+    end
+    rightranges = ntuple(ndims(xs)) do j
+        if i == j
+            firstindex(xs, j) + mid:lastindex(xs, j)
+        else
+            firstindex(xs, j):lastindex(xs, j)
+        end
+    end
+    return (view(xs, leftranges...), view(xs, rightranges...))
+end
+
+halve(xs::AbstractArray{<:Any,0}) = ((), xs)
 
 function halve(xs::AbstractString)
     offset = firstindex(xs) - 1
