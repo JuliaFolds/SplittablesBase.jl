@@ -44,7 +44,7 @@ function halve(xs::AbstractVector)
 end
 
 function halve(xs::AbstractArray)
-    i = something(findlast(>(1), size(xs)), 1)
+    i = something(findlast(x -> x > 1, size(xs)), 1)
     mid = size(xs, i) ÷ 2
     leftranges = ntuple(ndims(xs)) do j
         if i == j
