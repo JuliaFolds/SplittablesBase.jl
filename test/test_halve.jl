@@ -2,6 +2,7 @@ module TestHalve
 
 import SplittablesBase
 using Base.Iterators: partition, product
+using OffsetArrays: OffsetArray
 
 raw_examples = """
 1:10
@@ -18,6 +19,8 @@ permutedims(reshape(1:24, 2, 3, 4), (2, 1, 3))
 permutedims(reshape(1:24, 2, 3, 4), (2, 3, 1))
 permutedims(reshape(1:24, 2, 3, 4), (3, 1, 2))
 permutedims(reshape(1:24, 2, 3, 4), (3, 2, 1))
+OffsetArray(1:15, -1)
+OffsetArray(reshape(1:15, 3, 5), -1:1, 0:4)
 "abcde"
 "abcdef"
 "αβγδϵ"
