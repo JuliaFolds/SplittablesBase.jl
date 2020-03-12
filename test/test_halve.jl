@@ -8,6 +8,16 @@ raw_examples = """
 1:11
 [1:10;]
 [1:11;]
+reshape(1:6, 2, 3)
+adjoint(reshape(1:6, 2, 3))
+transpose(reshape(1:6, 2, 3))
+permutedims(reshape(1:6, 2, 3))
+permutedims(reshape(1:24, 2, 3, 4), (1, 2, 3))
+permutedims(reshape(1:24, 2, 3, 4), (1, 3, 2))
+permutedims(reshape(1:24, 2, 3, 4), (2, 1, 3))
+permutedims(reshape(1:24, 2, 3, 4), (2, 3, 1))
+permutedims(reshape(1:24, 2, 3, 4), (3, 1, 2))
+permutedims(reshape(1:24, 2, 3, 4), (3, 2, 1))
 "abcde"
 "abcdef"
 "αβγδϵ"
