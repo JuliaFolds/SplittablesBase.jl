@@ -41,9 +41,17 @@ isequal(
 )
 ```
 
-(2) `halve` must shorten the collection.  More precisely, if
-`length(collection) > 1`, both `length(left) < length(collection)` and
-`length(right) < length(collection)` must hold.
+(2) `halve` must eventually shorten the collection.  More precisely,
+the following function must terminate:
+
+```julia
+function recursive_halve(collection)
+    length(collection) == 0 && return
+    left, right = halve(collection)
+    recursive_halve(left)
+    recursive_halve(right)
+end
+```
 
 Furthermore, whenever implementable with cheap operations,
 `length(left)` should be close to `length(collection) ÷ 2` as much as
