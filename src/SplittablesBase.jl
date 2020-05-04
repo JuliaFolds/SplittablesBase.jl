@@ -1,16 +1,17 @@
 baremodule SplittablesBase
 
 function halve end
+function amount end
 
 module Implementations
-import ..SplittablesBase: SplittablesBase, halve
+import ..SplittablesBase: SplittablesBase, amount, halve
 using Setfield: @set
 include("implementations.jl")
 end  # module
 
 module Testing
 using Test: @test, @testset
-using ..SplittablesBase: halve
+using ..SplittablesBase: amount, halve
 include("testing.jl")
 end  # module
 

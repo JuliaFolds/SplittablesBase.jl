@@ -2,6 +2,7 @@
 for (name, path) in [
     :SplittablesBase => joinpath(dirname(@__DIR__), "README.md"),
     :halve => joinpath(@__DIR__, "halve.md"),
+    :amount => joinpath(@__DIR__, "amount.md"),
 ]
     try
         include_dependency(path)
@@ -35,6 +36,9 @@ if isdefined(Iterators, :AbstractZipIterator)  # VERSION < v"1.1-"
 else
     const _Zip = Iterators.Zip
 end
+
+amount(xs) = length(xs)
+amount(xs::AbstractString) = lastindex(xs) - firstindex(xs) + 1
 
 function halve(xs::AbstractVector)
     mid = length(xs) ÷ 2
@@ -104,6 +108,8 @@ lastslot(xs::Dict) = lastindex(xs.slots)
 
 firstslot(xs::DictView) = xs.firstslot
 lastslot(xs::DictView) = xs.lastslot
+
+amount(xs::Union{Dict,DictView}) = lastslot(xs) - firstslot(xs) + 1
 
 function halve(xs::Union{Dict,DictView})
     i1 = firstslot(xs)
