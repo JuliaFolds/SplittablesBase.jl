@@ -24,6 +24,19 @@ julia> _unzip(((1, 2, 3), (4, 5, 6)))
 """
 _unzip(xs::Tuple{Vararg{NTuple{N,Any}}}) where {N} = ntuple(i -> map(x -> x[i], xs), N)
 
+"""
+    arguments(xs)
+
+An "inverse" of a factory function.  It returns a tuple s.t.
+
+```
+args == arguments(f(args...))
+```
+
+where `f` is `zip`, `Base.Generator`, `Iterators.filter`, etc.
+"""
+function arguments end
+
 if isdefined(Iterators, :Zip1)  # VERSION < v"1.1-"
     arguments(xs::Iterators.Zip1) = (xs.a,)
     arguments(xs::Iterators.Zip2) = (xs.a, xs.b)
@@ -36,6 +49,13 @@ if isdefined(Iterators, :AbstractZipIterator)  # VERSION < v"1.1-"
 else
     const _Zip = Iterators.Zip
 end
+
+arguments(xs::Base.Generator) = (xs.f, xs.iter)
+arguments(xs::Iterators.Filter) = (xs.flt, xs.itr)
+arguments(xs::Iterators.Flatten) = (xs.it,)
+
+safelength(xs) =
+    Base.IteratorSize(xs) isa Union{Base.HasLength,Base.HasShape} ? length(xs) : nothing
 
 amount(xs) = length(xs)
 amount(xs::AbstractString) = lastindex(xs) - firstindex(xs) + 1
@@ -139,6 +159,34 @@ end
     lnames, rnames = halve(names)
     return NamedTuple{lnames}(xs), NamedTuple{rnames}(xs)
 end
+
+amount(xs::Base.Generator) = amount(arguments(xs)[2])
+
+function halve(xs::Base.Generator)
+    f, coll = arguments(xs)
+    left, right = halve(coll)
+    return Base.Generator(f, left), Base.Generator(f, right)
+end
+
+amount(xs::Iterators.Filter) = amount(arguments(xs)[2])
+
+function halve(xs::Iterators.Filter)
+    f, coll = arguments(xs)
+    left, right = halve(coll)
+    return Iterators.filter(f, left), Iterators.filter(f, right)
+end
+
+amount(xs::Iterators.Flatten) = amount(arguments(xs)[1])
+
+function halve(xs::Iterators.Flatten)
+    coll, = arguments(xs)
+    left, right = halve(coll)
+    return Iterators.flatten(left), Iterators.flatten(right)
+    # return _flatten(left), _flatten(right)
+end
+
+# Is this better?
+# _flatten(xs) = safelength(xs) == 1 ? first(xs) : Iterators.flatten(xs)
 
 function halve(xs::_Zip)
     lefts, rights = _unzip(map(halve, arguments(xs)))

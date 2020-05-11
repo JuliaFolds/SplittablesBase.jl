@@ -35,6 +35,15 @@ function recursive_vcat(data, _len = length)
     return vcat(recursive_vcat(left, _len), recursive_vcat(right, _len))
 end
 
+function test_recursive_halving(x)
+    @testset "recursive halving" begin
+        if Base.IteratorSize(getdata(x)) isa Union{Base.HasLength,Base.HasShape}
+            @test isequal(recursive_vcat(getdata(x)), vec(collect(getdata(x))))
+        end
+        @test isequal(recursive_vcat(getdata(x), amount), vec(collect(getdata(x))))
+    end
+end
+
 function test_ordered(examples)
     @testset "$(getlabel(x))" for x in enumerate(examples)
         @testset "vcat" begin
@@ -45,10 +54,7 @@ function test_ordered(examples)
                 vec(collect(getdata(x))),
             )
         end
-        @testset "recursive halving" begin
-            @test isequal(recursive_vcat(getdata(x)), vec(collect(getdata(x))))
-            @test isequal(recursive_vcat(getdata(x), amount), vec(collect(getdata(x))))
-        end
+        test_recursive_halving(x)
     end
 end
 
@@ -77,9 +83,6 @@ function test_unordered(examples)
                 merge(+, countmap(collect(left)), countmap(collect(right))),
             )
         end
-        @testset "recursive halving" begin
-            @test isequal(recursive_vcat(getdata(x)), vec(collect(getdata(x))))
-            @test isequal(recursive_vcat(getdata(x), amount), vec(collect(getdata(x))))
-        end
+        test_recursive_halving(x)
     end
 end
