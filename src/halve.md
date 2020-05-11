@@ -56,8 +56,3 @@ end
 Furthermore, whenever implementable with cheap operations,
 `length(left)` should be close to `length(collection) ÷ 2` as much as
 possible.
-
-# Limitation
-
-* `halve` on `zip` of iterators with unequal lengths does not satisfy
-  the "`vcat` law".

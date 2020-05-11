@@ -24,6 +24,9 @@ julia> _unzip(((1, 2, 3), (4, 5, 6)))
 """
 _unzip(xs::Tuple{Vararg{NTuple{N,Any}}}) where {N} = ntuple(i -> map(x -> x[i], xs), N)
 
+tail(xs) = _tail(xs...)
+_tail(_, args...) = args
+
 """
     arguments(xs)
 
@@ -53,6 +56,7 @@ end
 arguments(xs::Base.Generator) = (xs.f, xs.iter)
 arguments(xs::Iterators.Filter) = (xs.flt, xs.itr)
 arguments(xs::Iterators.Flatten) = (xs.it,)
+arguments(xs::Iterators.PartitionIterator) = (xs.c, xs.n)
 
 safelength(xs) =
     Base.IteratorSize(xs) isa Union{Base.HasLength,Base.HasShape} ? length(xs) : nothing
@@ -202,7 +206,22 @@ end
 # Is this better?
 # _flatten(xs) = safelength(xs) == 1 ? first(xs) : Iterators.flatten(xs)
 
+shape(xs::Union{AbstractArray,Broadcast.Broadcasted}) = size(xs)
+shape(xs::Base.Generator) = size(arguments(xs)[2])
+shape(xs::Union{NamedTuple,Tuple}) = (length(xs),)
+
+# Make sure that `halve` on the collections give consistent result.
+function checkshape(xs::_Zip)
+    args = arguments(xs)
+    length(args) < 2 && return
+    sizes = map(shape, args)
+    if !all(==(sizes[1]), tail(sizes))
+        throw(ArgumentError("`halve(zip(...))` requires collections with identical `size`"))
+    end
+end
+
 function halve(xs::_Zip)
+    checkshape(xs)
     lefts, rights = _unzip(map(halve, arguments(xs)))
     return zip(lefts...), zip(rights...)
 end
@@ -218,9 +237,14 @@ function halve(product::Iterators.ProductIterator)
     return (@set(product.iterators[i] = left), @set(product.iterators[i] = right))
 end
 
+function shape(xs::Iterators.PartitionIterator)
+    coll, = arguments(xs)
+    shape(coll)  # make sure it has a shape
+    return (length(xs),)
+end
+
 function halve(xs::Iterators.PartitionIterator)
-    coll = xs.c
-    n = xs.n
+    coll, n = arguments(xs)
     m = n * cld(div(length(coll), n), 2)
     offset = firstindex(coll) - 1
     return (

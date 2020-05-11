@@ -50,7 +50,8 @@ partition(1:10, 3)
 partition(1:10, 4)
 enumerate([11, 22, 33, 44])
 enumerate([11, 22, 33, 44, 55])
-zip(1:3, partition(1:10, 4), "αβγ")
+zip(1:3, partition(1:10, 4))
+zip("αβγ")
 """
 
 # An array of `(label = ..., data = ...)`
