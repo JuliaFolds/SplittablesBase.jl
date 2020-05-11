@@ -89,28 +89,39 @@ end
 
 halve(xs::AbstractArray{<:Any,0}) = ((), xs)
 
-struct DictView{D}
+# A view wrapper returned from `halve` on `Dict`, `keys`, `values`, and `Set`.
+struct DictView{D,F}
     dict::D
     firstslot::Int
     lastslot::Int
+    f::F  # identity, first, or last
 end
 
-DictView(xs::DictView, i::Int, j::Int) = DictView(xs.dict, i, j)
+DictView(xs::DictView, i::Int, j::Int) = DictView(xs.dict, i, j, xs.f)
 
-Base.IteratorEltype(::Type{DV}) where {D, DV <: DictView{D}} = Base.IteratorEltype(D)
+Base.IteratorEltype(::Type{<:DictView{D}}) where {D} = Base.IteratorEltype(D)
 Base.IteratorSize(::Type{<:DictView}) = Base.SizeUnknown()
 
-Base.eltype(::Type{DV}) where {D, DV <: DictView{D}} = eltype(D)
+Base.eltype(::Type{<:DictView{D,typeof(identity)}}) where {D} = eltype(D)
+Base.eltype(::Type{<:DictView{D,typeof(first)}}) where {D} = keytype(D)
+Base.eltype(::Type{<:DictView{D,typeof(last)}}) where {D} = valtype(D)
+
+const DictWrapper = Union{Set,KeySet,ValueIterator}
+const DictLike = Union{Dict,DictView,DictWrapper}
+
+DictView(xs::AbstractDict, i::Int, j::Int) = DictView(xs, i, j, identity)
+DictView(xs::Union{KeySet,Set}, i::Int, j::Int) = DictView(xs.dict, i, j, first)
+DictView(xs::ValueIterator, i::Int, j::Int) = DictView(xs.dict, i, j, last)
 
 # Note: this relies on the implementation detail of `iterate(::Dict)`.
-function Base.iterate(xs::DictView, i = xs.firstslot)
+@inline function Base.iterate(xs::DictView, i = xs.firstslot)
     i <= xs.lastslot || return nothing
     y = iterate(xs.dict, i)
     y === nothing && return nothing
-    _, j = y
+    x, j = y
     # If `j` is `xs.lastslot + 1` or smaller, it means the current element is
     # within the range of this `DictView`:
-    j <= xs.lastslot + 1 && return y
+    j <= xs.lastslot + 1 && return xs.f(x), j
     # Otherwise, we need to stop:
     return nothing
 end
@@ -129,9 +140,12 @@ lastslot(xs::Dict) = lastindex(xs.slots)
 firstslot(xs::DictView) = xs.firstslot
 lastslot(xs::DictView) = xs.lastslot
 
-amount(xs::Union{Dict,DictView}) = lastslot(xs) - firstslot(xs) + 1
+firstslot(xs::DictWrapper) = firstslot(xs.dict)
+lastslot(xs::DictWrapper) = lastslot(xs.dict)
 
-function halve(xs::Union{Dict,DictView})
+amount(xs::DictLike) = lastslot(xs) - firstslot(xs) + 1
+
+function halve(xs::DictLike)
     i1 = firstslot(xs)
     i3 = lastslot(xs)
     i2 = (i3 - i1 + 1) ÷ 2 + i1

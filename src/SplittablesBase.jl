@@ -5,6 +5,7 @@ function amount end
 
 module Implementations
 import ..SplittablesBase: SplittablesBase, amount, halve
+using Base: KeySet, ValueIterator
 using Setfield: @set
 include("implementations.jl")
 end  # module

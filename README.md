@@ -29,6 +29,10 @@ SplittablesBase.jl:
 
 * `AbstractArray`
 * `AbstractString`
+* `Dict`
+* `keys(::Dict)`
+* `values(::Dict)`
+* `Set`
 * `Tuple`
 * `NamedTuple`
 * `zip`
