@@ -39,6 +39,7 @@ SplittablesBase.jl:
 * `Base.Generator`
 * `Iterators.filter`
 * `Iterators.flatten`
+* `Iterators.partition`
 * `Iterators.product`
 * `Iterators.enumerate`
 
