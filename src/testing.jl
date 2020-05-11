@@ -29,10 +29,10 @@ function getdata(x)
     end
 end
 
-function recursive_vcat(data)
-    length(data) < 2 && return vec(collect(data))
+function recursive_vcat(data, _len = length)
+    _len(data) < 2 && return vec(collect(data))
     left, right = halve(data)
-    return vcat(recursive_vcat(left), recursive_vcat(right))
+    return vcat(recursive_vcat(left, _len), recursive_vcat(right, _len))
 end
 
 function test_ordered(examples)
@@ -47,6 +47,7 @@ function test_ordered(examples)
         end
         @testset "recursive halving" begin
             @test isequal(recursive_vcat(getdata(x)), vec(collect(getdata(x))))
+            @test isequal(recursive_vcat(getdata(x), amount), vec(collect(getdata(x))))
         end
     end
 end
@@ -73,6 +74,7 @@ function test_unordered(examples)
         end
         @testset "recursive halving" begin
             @test isequal(recursive_vcat(getdata(x)), vec(collect(getdata(x))))
+            @test isequal(recursive_vcat(getdata(x), amount), vec(collect(getdata(x))))
         end
     end
 end

@@ -3,10 +3,14 @@
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://tkf.github.io/SplittablesBase.jl/dev)
 [![GitHub Actions](https://github.com/tkf/SplittablesBase.jl/workflows/Run%20tests/badge.svg)](https://github.com/tkf/SplittablesBase.jl/actions?query=workflow%3A%22Run+tests%22)
 
-SplittablesBase.jl defines a simple API `halve(collection)` for
-splitting given `collection` roughly in half.  This is the basis of
-parallel algorithms like reduction and sorting.  Custom containers can
-support many parallel algorithms by simply defining a single function.
+SplittablesBase.jl defines a simple set of APIs:
+
+* `halve(collection)`: splitting given `collection` roughly in half.
+* `amount(collection)`: an "approximation" of `length`.
+
+These are the basis of parallel algorithms that can be derived from
+`reduce`.  Custom containers can support many parallel algorithms by
+simply defining these functions.
 
 SplittablesBase.jl also defines an experimental simple test utility
 functions `SplittablesBase.Testing.test_ordered(examples)` and
