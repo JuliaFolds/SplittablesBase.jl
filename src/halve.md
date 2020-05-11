@@ -37,7 +37,7 @@ multiset:
 using StatsBase: countmap
 isequal(
     countmap(collect(collection)),
-    merge(+, countmap(collect(left)), coutmap(collect(right))),
+    merge(+, countmap(collect(left)), countmap(collect(right))),
 )
 ```
 

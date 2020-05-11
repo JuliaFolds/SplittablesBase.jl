@@ -1,6 +1,6 @@
 # Load docstring from markdown files:
 for (name, path) in [
-    :test => joinpath(@__DIR__, "test.md"),
+    :test_ordered => joinpath(@__DIR__, "test_ordered.md"),
 ]
     try
         include_dependency(path)
@@ -35,7 +35,7 @@ function recursive_vcat(data)
     return vcat(recursive_vcat(left), recursive_vcat(right))
 end
 
-function test(examples)
+function test_ordered(examples)
     @testset "$(getlabel(x))" for x in enumerate(examples)
         @testset "vcat" begin
             data = getdata(x)
@@ -43,6 +43,32 @@ function test(examples)
             @test isequal(
                 vcat(vec(collect(left)), vec(collect(right))),
                 vec(collect(getdata(x))),
+            )
+        end
+        @testset "recursive halving" begin
+            @test isequal(recursive_vcat(getdata(x)), vec(collect(getdata(x))))
+        end
+    end
+end
+
+@deprecate test test_ordered false
+
+function countmap(xs)
+    counts = Dict{Any,Int}()
+    for x in xs
+        counts[x] = get(counts, x, 0) + 1
+    end
+    return counts
+end
+
+function test_unordered(examples)
+    @testset "$(getlabel(x))" for x in enumerate(examples)
+        @testset "concatenation" begin
+            data = getdata(x)
+            left, right = halve(getdata(x))
+            @test isequal(
+                countmap(collect(data)),
+                merge(+, countmap(collect(left)), countmap(collect(right))),
             )
         end
         @testset "recursive halving" begin
