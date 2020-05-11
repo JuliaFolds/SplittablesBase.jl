@@ -62,6 +62,11 @@ function countmap(xs)
     return counts
 end
 
+"""
+    test_unordered(examples)
+
+See [`test_ordered`](@ref).
+"""
 function test_unordered(examples)
     @testset "$(getlabel(x))" for x in enumerate(examples)
         @testset "concatenation" begin

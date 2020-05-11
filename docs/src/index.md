@@ -4,5 +4,6 @@
 SplittablesBase
 SplittablesBase.halve
 SplittablesBase.amount
-SplittablesBase.Testing.test
+SplittablesBase.Testing.test_ordered
+SplittablesBase.Testing.test_unordered
 ```
