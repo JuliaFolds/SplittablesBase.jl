@@ -1,4 +1,5 @@
-    SplittablesBase.Testing.test(examples)
+    SplittablesBase.Testing.test_ordered(examples)
+    SplittablesBase.Testing.test_unordered(examples)
 
 Run interface tests on each test case in `examples`.
 
@@ -15,7 +16,7 @@ Run interface tests on each test case in `examples`.
 ```julia
 julia> using SplittablesBase
 
-julia> SplittablesBase.Testing.test([
+julia> SplittablesBase.Testing.test_ordered([
            (label = "First Test", data = 1:5),
            (label = "Second Test", data = (a = 1, b = 2, c = 3)),
            zip(1:3, 4:6),

@@ -65,6 +65,55 @@ end
 
 halve(xs::AbstractArray{<:Any,0}) = ((), xs)
 
+struct DictView{D}
+    dict::D
+    firstslot::Int
+    lastslot::Int
+end
+
+DictView(xs::DictView, i::Int, j::Int) = DictView(xs.dict, i, j)
+
+Base.IteratorEltype(::Type{DV}) where {D, DV <: DictView{D}} = Base.IteratorEltype(D)
+Base.IteratorSize(::Type{<:DictView}) = Base.SizeUnknown()
+
+Base.eltype(::Type{DV}) where {D, DV <: DictView{D}} = eltype(D)
+
+# Note: this relies on the implementation detail of `iterate(::Dict)`.
+function Base.iterate(xs::DictView, i = xs.firstslot)
+    i <= xs.lastslot || return nothing
+    y = iterate(xs.dict, i)
+    y === nothing && return nothing
+    _, j = y
+    # If `j` is `xs.lastslot + 1` or smaller, it means the current element is
+    # within the range of this `DictView`:
+    j <= xs.lastslot + 1 && return y
+    # Otherwise, we need to stop:
+    return nothing
+end
+
+function Base.length(xs::DictView)
+    n = 0
+    for _ in xs
+        n += 1
+    end
+    return n
+end
+
+firstslot(xs::Dict) = xs.idxfloor
+lastslot(xs::Dict) = lastindex(xs.slots)
+
+firstslot(xs::DictView) = xs.firstslot
+lastslot(xs::DictView) = xs.lastslot
+
+function halve(xs::Union{Dict,DictView})
+    i1 = firstslot(xs)
+    i3 = lastslot(xs)
+    i2 = (i3 - i1 + 1) ÷ 2 + i1
+    left = DictView(xs, i1, i2 - 1)
+    right = DictView(xs, i2, i3)
+    return (left, right)
+end
+
 function halve(xs::AbstractString)
     offset = firstindex(xs) - 1
     mid = thisind(xs, (lastindex(xs) - offset) ÷ 2 + offset)

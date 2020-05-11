@@ -51,6 +51,6 @@ examples = map(split(raw_examples, "\n", keepempty = false)) do code
     (label = code, data = Base.include_string(@__MODULE__, code))
 end
 
-SplittablesBase.Testing.test(examples)
+SplittablesBase.Testing.test_ordered(examples)
 
 end  # module
