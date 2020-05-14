@@ -28,9 +28,11 @@ end
     err = @expect MethodError halve(zip(1:3, "abc"))
     @test err.f === shape
 
-    err = @expect ArgumentError halve(zip())
-    msg = sprint(showerror, err)
-    @test occursin("empty `zip` does not have `size`", msg)
+    if !isdefined(Iterators, :Zip1)  # VERSION >= v"1.1-"
+        err = @expect ArgumentError halve(zip())
+        msg = sprint(showerror, err)
+        @test occursin("empty `zip` does not have `size`", msg)
+    end
 end
 
 end  # module
