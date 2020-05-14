@@ -211,7 +211,7 @@ shape(xs::Base.Generator) = size(arguments(xs)[2])
 shape(xs::Union{NamedTuple,Tuple}) = (length(xs),)
 
 # Make sure that `halve` on the collections give consistent result.
-checkshape(xs::_Zip) = length(arguments(xs)) < 2 || shape(xs)
+checkshape(xs::_Zip) = length(arguments(xs)) == 1 || shape(xs)
 function shape(xs::_Zip)
     args = arguments(xs)
     length(args) == 0 && throw(ArgumentError("empty `zip` does not have `size`."))
