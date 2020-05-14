@@ -211,13 +211,15 @@ shape(xs::Base.Generator) = size(arguments(xs)[2])
 shape(xs::Union{NamedTuple,Tuple}) = (length(xs),)
 
 # Make sure that `halve` on the collections give consistent result.
-function checkshape(xs::_Zip)
+checkshape(xs::_Zip) = length(arguments(xs)) < 2 || shape(xs)
+function shape(xs::_Zip)
     args = arguments(xs)
-    length(args) < 2 && return
+    length(args) == 0 && throw(ArgumentError("empty `zip` does not have `size`."))
     sizes = map(shape, args)
     if !all(==(sizes[1]), tail(sizes))
         throw(ArgumentError("`halve(zip(...))` requires collections with identical `size`"))
     end
+    return sizes[1]
 end
 
 function halve(xs::_Zip)
@@ -252,6 +254,8 @@ function halve(xs::Iterators.PartitionIterator)
         Iterators.partition(view(coll, offset .+ (m+1:length(coll))), n),
     )
 end
+
+shape(xs::Iterators.Enumerate) = shape(xs.itr)
 
 function halve(xs::Iterators.Enumerate)
     left, right = halve(xs.itr)

@@ -52,6 +52,8 @@ enumerate([11, 22, 33, 44])
 enumerate([11, 22, 33, 44, 55])
 zip(1:3, partition(1:10, 4))
 zip("αβγ")
+zip(enumerate([11, 22, 33, 44]), 'a':'d')
+zip(enumerate([11, 22, 33, 44, 55]), 'a':'e')
 """
 
 # An array of `(label = ..., data = ...)`
