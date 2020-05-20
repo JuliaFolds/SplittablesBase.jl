@@ -42,6 +42,7 @@ SplittablesBase.jl:
 * `Iterators.partition`
 * `Iterators.product`
 * `Iterators.enumerate`
+* `skipmissing`
 
 ## Packages using SplittablesBase.jl
 

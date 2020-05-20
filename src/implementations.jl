@@ -57,6 +57,7 @@ arguments(xs::Base.Generator) = (xs.f, xs.iter)
 arguments(xs::Iterators.Filter) = (xs.flt, xs.itr)
 arguments(xs::Iterators.Flatten) = (xs.it,)
 arguments(xs::Iterators.PartitionIterator) = (xs.c, xs.n)
+arguments(xs::Base.SkipMissing) = (xs.x,)
 
 safelength(xs) =
     Base.IteratorSize(xs) isa Union{Base.HasLength,Base.HasShape} ? length(xs) : nothing
@@ -260,4 +261,12 @@ shape(xs::Iterators.Enumerate) = shape(xs.itr)
 function halve(xs::Iterators.Enumerate)
     left, right = halve(xs.itr)
     return enumerate(left), zip(length(left)+1:length(xs), right)
+end
+
+amount(xs::Base.SkipMissing) = amount(arguments(xs)[1])
+
+function halve(xs::Base.SkipMissing)
+    coll, = arguments(xs)
+    left, right = halve(coll)
+    return skipmissing(left), skipmissing(right)
 end
