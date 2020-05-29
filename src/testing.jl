@@ -27,10 +27,49 @@ function getdata(x)
     end
 end
 
-function recursive_vcat(data, _len = length)
+const RECURSION_LIMIT = Ref(1000)
+
+struct RecursionLimitError <: Exception
+    f
+    args::Tuple
+    kwargs::NamedTuple
+end
+
+RecursionLimitError(f, args) = RecursionLimitError(f, args, NamedTuple())
+
+function Base.showerror(io::IO, err::RecursionLimitError)
+    println(io, "RecursionLimitError")
+    print(io, "f = ", err.f)
+    for (i, a) in enumerate(err.args)
+        println(io)
+        print(io, "args[$i] = ")
+        show(io, "text/plain", a)
+    end
+    for (k, v) in pairs(err.kwargs)
+        println(io)
+        print(io, "kargs.$k = ")
+        show(io, "text/plain", v)
+    end
+end
+
+recursive_vcat(data, _len = length; recursion_limit = RECURSION_LIMIT[]) = recursive_vcat(
+    data,
+    _len,
+    0,
+    recursion_limit,
+    RecursionLimitError(recursive_vcat, (data, _len), (recursion_limit = recursion_limit,)),
+)
+
+function recursive_vcat(data, _len, recursions, limit, err)
+    recursions += 1
+    recursions > limit && throw(err)
     _len(data) < 2 && return vec(collect(data))
     left, right = halve(data)
-    return vcat(recursive_vcat(left, _len), recursive_vcat(right, _len))
+    @debug "recursive_vcat(data, $length)" _len(left) _len(right) data left right
+    return vcat(
+        recursive_vcat(left, _len, recursions, limit, err),
+        recursive_vcat(right, _len, recursions, limit, err),
+    )
 end
 
 function test_recursive_halving(x)
