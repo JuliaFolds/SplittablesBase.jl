@@ -1,7 +1,5 @@
 # Load docstring from markdown files:
-for (name, path) in [
-    :test_ordered => joinpath(@__DIR__, "test_ordered.md"),
-]
+for (name, path) in [:test_ordered => joinpath(@__DIR__, "test_ordered.md")]
     try
         include_dependency(path)
         str = read(path, String)
