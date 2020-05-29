@@ -34,6 +34,7 @@ function recursive_vcat(data, _len = length)
 end
 
 function test_recursive_halving(x)
+    @debug "Testing _recursive halving_: $(getlabel(x))"
     @testset "recursive halving" begin
         if Base.IteratorSize(getdata(x)) isa Union{Base.HasLength,Base.HasShape}
             @test isequal(recursive_vcat(getdata(x)), vec(collect(getdata(x))))
@@ -44,6 +45,7 @@ end
 
 function test_ordered(examples)
     @testset "$(getlabel(x))" for x in enumerate(examples)
+        @debug "Testing `vcat`: $(getlabel(x))"
         @testset "vcat" begin
             data = getdata(x)
             left, right = halve(getdata(x))
