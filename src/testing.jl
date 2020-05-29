@@ -52,7 +52,17 @@ function Base.showerror(io::IO, err::RecursionLimitError)
     end
 end
 
-recursive_vcat(data, _len = length; recursion_limit = RECURSION_LIMIT[]) = recursive_vcat(
+"""
+    recursive_vcat(splittable_iterator, [amount]; recursion_limit)
+
+Recursively call `halve` and `vcat`.  This should be equivalent to
+`collect(splittable_iterator)` for ordered iterators.
+
+The second argument is used for computing the length of an iterator.
+By default [`amount`](@ref) is used.  If `length` is defined, passing
+`length` should also work.
+"""
+recursive_vcat(data, _len = amount; recursion_limit = RECURSION_LIMIT[]) = recursive_vcat(
     data,
     _len,
     0,
@@ -76,9 +86,9 @@ function test_recursive_halving(x)
     @debug "Testing _recursive halving_: $(getlabel(x))"
     @testset "recursive halving" begin
         if Base.IteratorSize(getdata(x)) isa Union{Base.HasLength,Base.HasShape}
-            @test isequal(recursive_vcat(getdata(x)), vec(collect(getdata(x))))
+            @test isequal(recursive_vcat(getdata(x), length), vec(collect(getdata(x))))
         end
-        @test isequal(recursive_vcat(getdata(x), amount), vec(collect(getdata(x))))
+        @test isequal(recursive_vcat(getdata(x)), vec(collect(getdata(x))))
     end
 end
 
