@@ -1,7 +1,5 @@
 # Load docstring from markdown files:
-for (name, path) in [
-    :test_ordered => joinpath(@__DIR__, "test_ordered.md"),
-]
+for (name, path) in [:test_ordered => joinpath(@__DIR__, "test_ordered.md")]
     try
         include_dependency(path)
         str = read(path, String)
@@ -29,23 +27,74 @@ function getdata(x)
     end
 end
 
-function recursive_vcat(data, _len = length)
+const RECURSION_LIMIT = Ref(1000)
+
+struct RecursionLimitError <: Exception
+    f
+    args::Tuple
+    kwargs::NamedTuple
+end
+
+RecursionLimitError(f, args) = RecursionLimitError(f, args, NamedTuple())
+
+function Base.showerror(io::IO, err::RecursionLimitError)
+    println(io, "RecursionLimitError")
+    print(io, "f = ", err.f)
+    for (i, a) in enumerate(err.args)
+        println(io)
+        print(io, "args[$i] = ")
+        show(io, "text/plain", a)
+    end
+    for (k, v) in pairs(err.kwargs)
+        println(io)
+        print(io, "kargs.$k = ")
+        show(io, "text/plain", v)
+    end
+end
+
+"""
+    recursive_vcat(splittable_iterator, [amount]; recursion_limit)
+
+Recursively call `halve` and `vcat`.  This should be equivalent to
+`collect(splittable_iterator)` for ordered iterators.
+
+The second argument is used for computing the length of an iterator.
+By default [`amount`](@ref) is used.  If `length` is defined, passing
+`length` should also work.
+"""
+recursive_vcat(data, _len = amount; recursion_limit = RECURSION_LIMIT[]) = recursive_vcat(
+    data,
+    _len,
+    0,
+    recursion_limit,
+    RecursionLimitError(recursive_vcat, (data, _len), (recursion_limit = recursion_limit,)),
+)
+
+function recursive_vcat(data, _len, recursions, limit, err)
+    recursions += 1
+    recursions > limit && throw(err)
     _len(data) < 2 && return vec(collect(data))
     left, right = halve(data)
-    return vcat(recursive_vcat(left, _len), recursive_vcat(right, _len))
+    @debug "recursive_vcat(data, $length)" _len(left) _len(right) data left right
+    return vcat(
+        recursive_vcat(left, _len, recursions, limit, err),
+        recursive_vcat(right, _len, recursions, limit, err),
+    )
 end
 
 function test_recursive_halving(x)
+    @debug "Testing _recursive halving_: $(getlabel(x))"
     @testset "recursive halving" begin
         if Base.IteratorSize(getdata(x)) isa Union{Base.HasLength,Base.HasShape}
-            @test isequal(recursive_vcat(getdata(x)), vec(collect(getdata(x))))
+            @test isequal(recursive_vcat(getdata(x), length), vec(collect(getdata(x))))
         end
-        @test isequal(recursive_vcat(getdata(x), amount), vec(collect(getdata(x))))
+        @test isequal(recursive_vcat(getdata(x)), vec(collect(getdata(x))))
     end
 end
 
 function test_ordered(examples)
     @testset "$(getlabel(x))" for x in enumerate(examples)
+        @debug "Testing `vcat`: $(getlabel(x))"
         @testset "vcat" begin
             data = getdata(x)
             left, right = halve(getdata(x))
