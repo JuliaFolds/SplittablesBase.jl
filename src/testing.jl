@@ -135,3 +135,9 @@ function test_unordered(examples)
         test_recursive_halving(x)
     end
 end
+
+const _PUBLIC_API = [
+    # A list of public APIs to be picked by SplittablesTesting.jl
+    :test_ordered,
+    :test_unordered,
+]
