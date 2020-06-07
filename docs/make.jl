@@ -1,7 +1,7 @@
-using Documenter, SplittablesBase
+using Documenter, SplittablesBase, SplittablesTesting
 
 makedocs(;
-    modules=[SplittablesBase],
+    modules=[SplittablesBase, SplittablesTesting],
     format=Documenter.HTML(),
     pages=[
         "Home" => "index.md",
