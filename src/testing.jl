@@ -120,7 +120,7 @@ end
 """
     SplittablesTesting.test_unordered(examples)
 
-See [`test_ordered`](@ref Main.SplittablesTesting.test_ordered).
+See [`test_ordered`](@ref SplittablesTesting.test_ordered).
 """
 function test_unordered(examples)
     @testset "$(getlabel(x))" for x in enumerate(examples)
