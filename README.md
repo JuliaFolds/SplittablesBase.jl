@@ -12,12 +12,11 @@ These are the basis of parallel algorithms that can be derived from
 `reduce`.  Custom containers can support many parallel algorithms by
 simply defining these functions.
 
-SplittablesBase.jl also defines an experimental simple test utility
-functions `SplittablesBase.Testing.test_ordered(examples)` and
-`SplittablesBase.Testing.test_unordered(examples)` where some
-automatable tests are run against each example container in
-`examples`.  This utility function is planned to be moved out to a
-separate package.
+[SplittablesTesting.jl](https://github.com/JuliaFolds/SplittablesTesting.jl)
+provides simple test utility functions
+`SplittablesTesting.test_ordered(examples)` and
+`SplittablesTesting.test_unordered(examples)` that run some
+automatable tests with each example container in `examples`.
 
 See more in the
 [documentation](https://juliafolds.github.io/SplittablesBase.jl/dev).
