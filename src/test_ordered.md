@@ -1,5 +1,5 @@
-    SplittablesBase.Testing.test_ordered(examples)
-    SplittablesBase.Testing.test_unordered(examples)
+    SplittablesTesting.test_ordered(examples)
+    SplittablesTesting.test_unordered(examples)
 
 Run interface tests on each test case in `examples`.
 

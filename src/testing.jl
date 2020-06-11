@@ -118,9 +118,9 @@ function countmap(xs)
 end
 
 """
-    test_unordered(examples)
+    SplittablesTesting.test_unordered(examples)
 
-See [`test_ordered`](@ref).
+See [`test_ordered`](@ref Main.SplittablesTesting.test_ordered).
 """
 function test_unordered(examples)
     @testset "$(getlabel(x))" for x in enumerate(examples)
