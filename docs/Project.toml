@@ -1,2 +1,4 @@
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+SplittablesBase = "171d559e-b47b-412a-8079-5efa626c420e"
+SplittablesTesting = "3bda5eb5-c32a-4f64-8618-df3be8968470"
