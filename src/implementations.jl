@@ -229,6 +229,8 @@ function halve(xs::_Zip)
     return zip(lefts...), zip(rights...)
 end
 
+shape(xs::Iterators.ProductIterator) = map(length, xs.iterators)
+
 function halve(product::Iterators.ProductIterator)
     i = findlast(x -> length(x) > 1, product.iterators)
     if i === nothing
