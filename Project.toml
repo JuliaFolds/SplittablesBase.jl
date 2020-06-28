@@ -14,7 +14,8 @@ julia = "1"
 [extras]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 OffsetArrays = "6fe1bfb0-de20-5000-8ca7-80f57d26f881"
+SplittablesTesting = "3bda5eb5-c32a-4f64-8618-df3be8968470"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [targets]
-test = ["Documenter", "OffsetArrays", "Test"]
+test = ["Documenter", "OffsetArrays", "SplittablesTesting", "Test"]
