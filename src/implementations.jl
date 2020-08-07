@@ -159,6 +159,11 @@ function halve(xs::DictLike)
     return (left, right)
 end
 
+function halve(xs::Iterators.Pairs)
+    left, right = halve(keys(xs))
+    return Iterators.Pairs(values(xs), left), Iterators.Pairs(values(xs), right)
+end
+
 function halve(xs::AbstractString)
     offset = firstindex(xs) - 1
     mid = thisind(xs, (lastindex(xs) - offset) ÷ 2 + offset)
