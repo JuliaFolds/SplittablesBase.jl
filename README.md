@@ -35,6 +35,7 @@ SplittablesBase.jl:
 * `Tuple`
 * `NamedTuple`
 * `zip`
+* `pairs`
 * `Base.Generator`
 * `Iterators.filter`
 * `Iterators.flatten`
