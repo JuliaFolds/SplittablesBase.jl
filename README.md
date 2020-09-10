@@ -46,7 +46,8 @@ SplittablesBase.jl:
 
 ## Packages using SplittablesBase.jl
 
-* [Transducers.jl](https://github.com/tkf/Transducers.jl)
+* [Transducers.jl](https://github.com/JuliaFolds/Transducers.jl)
+* [FLoops.jl](https://github.com/JuliaFolds/FLoops.jl)
 * [ThreadsX.jl](https://github.com/tkf/ThreadsX.jl)
 
 ## See also
