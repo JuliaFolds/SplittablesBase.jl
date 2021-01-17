@@ -270,6 +270,11 @@ function halve(xs::Iterators.Enumerate)
     return enumerate(left), zip(length(left)+1:length(xs), right)
 end
 
+function halve(xs::Iterators.Reverse)
+    left, right = halve(xs.itr)
+    return Iterators.reverse(right), Iterators.reverse(left)
+end
+
 amount(xs::Base.SkipMissing) = amount(arguments(xs)[1])
 
 function halve(xs::Base.SkipMissing)

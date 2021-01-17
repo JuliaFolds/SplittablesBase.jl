@@ -60,6 +60,8 @@ zip("αβγ")
 zip(enumerate([11, 22, 33, 44]), 'a':'d')
 zip(enumerate([11, 22, 33, 44, 55]), 'a':'e')
 zip(Iterators.product(1:3, 'a':'b'), ones(3, 2))
+Iterators.reverse(1:10)
+Iterators.reverse(zip(1:3, 'a':'c'))
 skipmissing([1, 2, missing, 4])
 skipmissing([1, 2, missing, 4, 5])
 """
