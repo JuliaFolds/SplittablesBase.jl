@@ -267,7 +267,7 @@ shape(xs::Iterators.Enumerate) = shape(xs.itr)
 
 function halve(xs::Iterators.Enumerate)
     left, right = halve(xs.itr)
-    return enumerate(left), zip(length(left)+1:length(xs), right)
+    return enumerate(left), zip(reshape(length(left)+1:length(xs), size(right)), right)
 end
 
 function halve(xs::Iterators.Reverse)
