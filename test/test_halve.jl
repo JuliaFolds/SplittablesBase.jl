@@ -33,6 +33,14 @@ pairs(adjoint(reshape(1:6, 2, 3)))
 "あいうえおか"
 "aいυe𝒐"
 "aいυe𝒐か"
+eachindex("abcde")
+eachindex("abcdef")
+eachindex("αβγδϵ")
+eachindex("αβγδϵζ")
+eachindex("あいうえお")
+eachindex("あいうえおか")
+eachindex("aいυe𝒐")
+eachindex("aいυe𝒐か")
 (1, 2, 3, 4, 5)
 (1, 2, 3, 4, 5, 6)
 (a=1, b=2, c=3, d=4, e=5)

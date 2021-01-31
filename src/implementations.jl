@@ -64,6 +64,30 @@ safelength(xs) =
 
 amount(xs) = length(xs)
 amount(xs::AbstractString) = lastindex(xs) - firstindex(xs) + 1
+amount(xs::Base.EachStringIndex) = amount(xs.s)
+
+struct WithOffset{Iter,Offset}
+    iter::Iter
+    offset::Offset
+end
+
+withoffset(iter, offset) = WithOffset(iter, offset)
+withoffset(iter::WithOffset, offset) = WithOffset(iter.iter, iter.offset + offset)
+
+_shift(wo, ::Nothing) = nothing
+_shift(wo, (i, s)) = (convert(eltype(wo), wo.offset + i), s)
+Base.iterate(wo::WithOffset) = _shift(wo, iterate(wo.iter))
+Base.iterate(wo::WithOffset, s) = _shift(wo, iterate(wo.iter, s))
+
+Base.IteratorEltype(::Type{<:WithOffset{Iter}}) where {Iter} =
+    Base.IteratorEltype(Iter)
+Base.IteratorSize(::Type{<:WithOffset{Iter}}) where {Iter} =
+    Base.IteratorSize(Iter)
+Base.eltype(::Type{WithOffset{Iter,Offset}}) where {Iter,Offset} =
+    promote_type(eltype(Iter), Offset)
+Base.length(wo::WithOffset) = length(wo.iter)
+Base.size(wo::WithOffset) = size(wo.iter)
+amount(wo::WithOffset) = amount(wo.offset)
 
 function halve(xs::AbstractVector)
     mid = length(xs) ÷ 2
@@ -170,6 +194,20 @@ function halve(xs::AbstractString)
     left = SubString(xs, firstindex(xs):mid)
     right = SubString(xs, nextind(xs, mid):lastindex(xs))
     return (left, right)
+end
+
+function halve(xs::Base.EachStringIndex)
+    offset = firstindex(xs.s) - 1
+    mid = thisind(xs.s, (lastindex(xs.s) - offset) ÷ 2 + offset)
+    mid2 = nextind(xs.s, mid)
+    left = eachindex(SubString(xs.s, firstindex(xs.s):mid))
+    right = withoffset(eachindex(SubString(xs.s, mid2:lastindex(xs.s))), mid2 - 1)
+    return (left, right)
+end
+
+function halve(xs::WithOffset{<:Base.EachStringIndex})
+    left, right = halve(xs.iter)
+    return withoffset(left, xs.offset), withoffset(right, xs.offset)
 end
 
 @generated function halve(xs::NTuple{N,Any}) where {N}
